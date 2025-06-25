@@ -1,0 +1,12 @@
+{
+  "name": "User Management System",
+  "short_name": "UserMS",
+  "description": "Enterprise User Administration Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "categories": ["business", "productivity"],
+  "lang": "en",
+  "orientation": "portrait-primary"
+}

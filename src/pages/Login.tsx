@@ -25,7 +25,7 @@ export default function Login() {
   // Show loading spinner while checking authentication state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -56,28 +56,28 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <div className="w-full max-w-md">
         {/* Logo and Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-xl mb-4 shadow-lg">
             <Building2 className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">UserMS</h1>
-          <p className="text-gray-600">Enterprise User Management System</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">UserMS</h1>
+          <p className="text-muted-foreground">Enterprise User Management System</p>
         </div>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur">
+        <Card className="shadow-xl border bg-card">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-semibold">Welcome Back</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl font-semibold text-card-foreground">Welcome Back</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Sign in to your account to access the management dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username or Email</Label>
+                <Label htmlFor="username" className="text-foreground">Username or Email</Label>
                 <Input
                   id="username"
                   name="username"
@@ -87,12 +87,12 @@ export default function Login() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="h-11"
+                  className="h-11 bg-background text-foreground border-border"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-foreground">Password</Label>
                 <Input
                   id="password"
                   name="password"
@@ -102,19 +102,19 @@ export default function Login() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="h-11"
+                  className="h-11 bg-background text-foreground border-border"
                 />
               </div>
 
               {error && (
                 <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription className="text-destructive-foreground">{error}</AlertDescription>
                 </Alert>
               )}
 
               <Button 
                 type="submit" 
-                className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -129,9 +129,9 @@ export default function Login() {
             </form>
 
             {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h4>
-              <div className="text-sm text-blue-700">
+            <div className="mt-6 p-4 bg-muted rounded-lg border border-border">
+              <h4 className="text-sm font-medium text-foreground mb-2">Demo Credentials</h4>
+              <div className="text-sm text-muted-foreground">
                 <p><strong>Username:</strong> admin@system.com</p>
                 <p><strong>Password:</strong> admin123</p>
               </div>
@@ -139,7 +139,7 @@ export default function Login() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6 text-sm text-gray-500">
+        <div className="text-center mt-6 text-sm text-muted-foreground">
           © 2024 UserMS Enterprise. All rights reserved.
         </div>
       </div>

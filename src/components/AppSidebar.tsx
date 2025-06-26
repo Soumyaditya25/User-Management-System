@@ -82,7 +82,7 @@ const menuItems = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -99,8 +99,8 @@ export function AppSidebar() {
   
   const getNavCls = (active: boolean) =>
     active 
-      ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90" 
-      : "hover:bg-accent hover:text-accent-foreground";
+      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium hover:bg-sidebar-accent/90" 
+      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
 
   const toggleGroup = (groupTitle: string) => {
     setOpenGroups(prev => 
@@ -111,69 +111,77 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={isCollapsed ? "w-14" : "w-64"} collapsible="icon">
-      <div className="flex items-center justify-between p-4 border-b">
-        {!isCollapsed && (
+    <Sidebar className={`${isCollapsed && !isMobile ? "w-14" : "w-64"} bg-sidebar border-r border-sidebar-border`} collapsible="icon">
+      <div className="flex items-center justify-between p-4 border-b border-sidebar-border bg-sidebar">
+        {(!isCollapsed || isMobile) && (
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-primary-foreground" />
+            <div className="w-8 h-8 bg-sidebar-primary rounded-md flex items-center justify-center">
+              <Building2 className="w-5 h-5 text-sidebar-primary-foreground" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">UserMS</h2>
-              <p className="text-xs text-muted-foreground">Enterprise Edition</p>
+              <h2 className="text-lg font-semibold text-sidebar-foreground">UserMS</h2>
+              <p className="text-xs text-sidebar-foreground/70">Enterprise Edition</p>
             </div>
           </div>
         )}
-        <SidebarTrigger className="ml-auto" />
+        {isCollapsed && !isMobile && (
+          <div className="w-8 h-8 bg-sidebar-primary rounded-md flex items-center justify-center mx-auto">
+            <Building2 className="w-5 h-5 text-sidebar-primary-foreground" />
+          </div>
+        )}
+        {!isMobile && <SidebarTrigger className="ml-auto h-6 w-6 text-sidebar-foreground hover:text-sidebar-accent-foreground" />}
       </div>
 
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-2 bg-sidebar">
         <SidebarGroup>
           <SidebarMenu>
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 {item.single ? (
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url!} className={getNavCls(isActive(item.url!))}>
-                      <item.icon className="w-4 h-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                  <SidebarMenuButton asChild className="w-full">
+                    <NavLink 
+                      to={item.url!} 
+                      className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${getNavCls(isActive)}`}
+                    >
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {(!isCollapsed || isMobile) && <span className="truncate">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 ) : (
                   <Collapsible
-                    open={openGroups.includes(item.title)}
-                    onOpenChange={() => toggleGroup(item.title)}
+                    open={openGroups.includes(item.title) && (!isCollapsed || isMobile)}
+                    onOpenChange={() => !isCollapsed && toggleGroup(item.title)}
                   >
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton 
-                        className={`w-full justify-between ${
+                        className={`w-full justify-between px-3 py-2 rounded-md transition-colors ${
                           isGroupActive(item.items!) 
-                            ? "bg-accent text-accent-foreground" 
-                            : "hover:bg-accent hover:text-accent-foreground"
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                         }`}
                       >
-                        <div className="flex items-center">
-                          <item.icon className="w-4 h-4" />
-                          {!isCollapsed && <span className="ml-2">{item.title}</span>}
+                        <div className="flex items-center gap-3">
+                          <item.icon className="w-4 h-4 flex-shrink-0" />
+                          {(!isCollapsed || isMobile) && <span className="truncate">{item.title}</span>}
                         </div>
-                        {!isCollapsed && (
+                        {(!isCollapsed || isMobile) && (
                           openGroups.includes(item.title) 
-                            ? <ChevronDown className="w-4 h-4" />
-                            : <ChevronRight className="w-4 h-4" />
+                            ? <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                            : <ChevronRight className="w-4 h-4 flex-shrink-0" />
                         )}
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
-                    {!isCollapsed && (
+                    {(!isCollapsed || isMobile) && (
                       <CollapsibleContent>
-                        <div className="ml-4 mt-1 space-y-1">
+                        <div className="ml-4 mt-1 space-y-1 border-l border-sidebar-border pl-4">
                           {item.items!.map((subItem) => (
                             <SidebarMenuButton key={subItem.title} asChild>
                               <NavLink 
                                 to={subItem.url} 
-                                className={`text-sm ${getNavCls(isActive(subItem.url))}`}
+                                className={({ isActive }) => `flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${getNavCls(isActive)}`}
                               >
-                                <span className="w-2 h-2 rounded-full bg-current opacity-50" />
-                                <span>{subItem.title}</span>
+                                <span className="w-2 h-2 rounded-full bg-current opacity-50 flex-shrink-0" />
+                                <span className="truncate">{subItem.title}</span>
                               </NavLink>
                             </SidebarMenuButton>
                           ))}

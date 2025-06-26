@@ -95,33 +95,198 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Fix dark mode text visibility */
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-    @apply text-foreground;
+  /* Enhanced dark mode text visibility fixes */
+  .dark {
+    color-scheme: dark;
   }
 
-  .dark p, .dark span, .dark div {
-    @apply text-foreground;
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-foreground !important;
+  }
+
+  .dark p, .dark span, .dark div, .dark label {
+    @apply text-foreground !important;
   }
 
   .dark .text-gray-900 {
-    @apply text-gray-100;
+    @apply text-gray-100 !important;
   }
 
   .dark .text-gray-800 {
-    @apply text-gray-200;
+    @apply text-gray-200 !important;
   }
 
   .dark .text-gray-700 {
-    @apply text-gray-300;
+    @apply text-gray-300 !important;
   }
 
   .dark .text-gray-600 {
-    @apply text-gray-400;
+    @apply text-gray-400 !important;
   }
 
-  .dark .text-gray-500 {
-    @apply text-foreground;
+  .dark .text-blue-600 {
+    @apply text-blue-400 !important;
+  }
+
+  .dark .text-blue-700 {
+    @apply text-blue-300 !important;
+  }
+
+  .dark .text-blue-900 {
+    @apply text-blue-200 !important;
+  }
+
+  /* Fix hover states in dark mode */
+  .dark .hover\:text-gray-600:hover {
+    @apply text-gray-300 !important;
+  }
+
+  .dark .hover\:text-gray-700:hover {
+    @apply text-gray-200 !important;
+  }
+
+  /* Fix card backgrounds in dark mode */
+  .dark .bg-white {
+    @apply bg-card !important;
+  }
+
+  .dark .bg-gray-50 {
+    @apply bg-muted !important;
+  }
+
+  .dark .bg-blue-50 {
+    @apply bg-muted !important;
+  }
+
+  /* Fix input and form elements */
+  .dark input, .dark textarea, .dark select {
+    @apply bg-background text-foreground border-border !important;
+  }
+
+  .dark .bg-gradient-to-br {
+    @apply from-gray-900 via-gray-800 to-gray-700 !important;
+  }
+
+  .dark .bg-gradient-to-r {
+    @apply from-blue-600 to-indigo-600 !important;
+  }
+
+  /* Badge fixes for dark mode */
+  .dark .bg-green-100 {
+    @apply bg-green-900/30 !important;
+  }
+
+  .dark .text-green-800 {
+    @apply text-green-300 !important;
+  }
+
+  .dark .bg-yellow-100 {
+    @apply bg-yellow-900/30 !important;
+  }
+
+  .dark .text-yellow-800 {
+    @apply text-yellow-300 !important;
+  }
+
+  .dark .bg-red-100 {
+    @apply bg-red-900/30 !important;
+  }
+
+  .dark .text-red-800 {
+    @apply text-red-300 !important;
+  }
+
+  .dark .bg-blue-100 {
+    @apply bg-blue-900/30 !important;
+  }
+
+  .dark .text-blue-800 {
+    @apply text-blue-300 !important;
+  }
+
+  .dark .bg-purple-100 {
+    @apply bg-purple-900/30 !important;
+  }
+
+  .dark .text-purple-800 {
+    @apply text-purple-300 !important;
+  }
+
+  .dark .bg-orange-100 {
+    @apply bg-orange-900/30 !important;
+  }
+
+  .dark .text-orange-800 {
+    @apply text-orange-300 !important;
+  }
+
+  .dark .bg-emerald-100 {
+    @apply bg-emerald-900/30 !important;
+  }
+
+  .dark .text-emerald-800 {
+    @apply text-emerald-300 !important;
+  }
+
+  .dark .bg-pink-100 {
+    @apply bg-pink-900/30 !important;
+  }
+
+  .dark .text-pink-800 {
+    @apply text-pink-300 !important;
+  }
+
+  .dark .bg-indigo-100 {
+    @apply bg-indigo-900/30 !important;
+  }
+
+  .dark .text-indigo-800 {
+    @apply text-indigo-300 !important;
+  }
+
+  .dark .bg-gray-100 {
+    @apply bg-gray-800 !important;
+  }
+
+  .dark .text-gray-800 {
+    @apply text-gray-200 !important;
+  }
+
+  /* Badge border colors for dark mode */
+  .dark .border-green-200 {
+    @apply border-green-700 !important;
+  }
+
+  .dark .border-yellow-200 {
+    @apply border-yellow-700 !important;
+  }
+
+  .dark .border-red-200 {
+    @apply border-red-700 !important;
+  }
+
+  .dark .border-blue-200 {
+    @apply border-blue-700 !important;
+  }
+
+  .dark .border-purple-200 {
+    @apply border-purple-700 !important;
+  }
+
+  .dark .border-orange-200 {
+    @apply border-orange-700 !important;
+  }
+
+  .dark .border-emerald-200 {
+    @apply border-emerald-700 !important;
+  }
+
+  .dark .border-pink-200 {
+    @apply border-pink-700 !important;
+  }
+
+  .dark .border-indigo-200 {
+    @apply border-indigo-700 !important;
   }
 }
 
@@ -145,4 +310,19 @@
 
 .offline-indicator {
   animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 768px) {
+  .sidebar-mobile-hidden {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-padding {
+    padding: 1rem !important;
+  }
 }

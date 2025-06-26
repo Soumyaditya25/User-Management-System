@@ -1,3 +1,4 @@
+
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
@@ -72,21 +73,6 @@ export function useKeyboardShortcuts() {
         const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement;
         if (searchInput) {
           searchInput.focus();
-        }
-      },
-    },
-    {
-      key: 'n',
-      description: 'New item (context dependent)',
-      action: () => {
-        const addButton = document.querySelector('[data-shortcut="new"]') as HTMLButtonElement;
-        if (addButton) {
-          addButton.click();
-        } else {
-          toast({
-            title: 'No action available',
-            description: 'No "new" action available on this page.',
-          });
         }
       },
     },

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 import { mockApiService, Tenant, User, Role, Organization } from '@/services/mockApi';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 interface DashboardStats {
   totalUsers: number;
@@ -31,6 +33,7 @@ interface DashboardStats {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -111,6 +114,34 @@ export default function Dashboard() {
     }
   };
 
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'create-user':
+        navigate('/users');
+        setTimeout(() => {
+          const addButton = document.querySelector('[data-action="add-user"]') as HTMLButtonElement;
+          if (addButton) {
+            addButton.click();
+          }
+        }, 100);
+        break;
+      case 'add-organization':
+        navigate('/organizations');
+        break;
+      case 'create-role':
+        navigate('/roles');
+        break;
+      case 'view-audit-logs':
+        navigate('/audit-logs');
+        break;
+      default:
+        toast({
+          title: 'Feature',
+          description: `${action} feature activated`,
+        });
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-6">
@@ -133,13 +164,16 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
             Welcome back, {user?.firstName}! Here's what's happening in your organization.
           </p>
         </div>
         <div className="mt-4 sm:mt-0">
-          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+          <Button 
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+            onClick={() => handleQuickAction('create-user')}
+          >
             <UserPlus className="w-4 h-4 mr-2" />
             Add New User
           </Button>
@@ -148,12 +182,12 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-600 mb-1">Total Users</p>
-                <p className="text-3xl font-bold text-blue-900">{stats?.totalUsers}</p>
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">Total Users</p>
+                <p className="text-3xl font-bold text-blue-900 dark:text-blue-100">{stats?.totalUsers}</p>
               </div>
               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Users className="w-6 h-6 text-white" />
@@ -162,36 +196,36 @@ export default function Dashboard() {
             <div className="flex items-center mt-4 text-sm">
               <TrendingUp className="w-4 h-4 text-green-600 mr-1" />
               <span className="text-green-600 font-medium">+12%</span>
-              <span className="text-gray-600 ml-1">from last month</span>
+              <span className="text-muted-foreground ml-1">from last month</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-emerald-200 dark:border-emerald-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-emerald-600 mb-1">Active Users</p>
-                <p className="text-3xl font-bold text-emerald-900">{stats?.activeUsers}</p>
+                <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-1">Active Users</p>
+                <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">{stats?.activeUsers}</p>
               </div>
               <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
             </div>
             <div className="flex items-center mt-4 text-sm">
-              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
+              <Badge variant="secondary" className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
                 {stats?.activeUsers}/{stats?.totalUsers} Active
               </Badge>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-600 mb-1">Organizations</p>
-                <p className="text-3xl font-bold text-purple-900">{stats?.totalOrganizations}</p>
+                <p className="text-sm font-medium text-purple-600 dark:text-purple-400 mb-1">Organizations</p>
+                <p className="text-3xl font-bold text-purple-900 dark:text-purple-100">{stats?.totalOrganizations}</p>
               </div>
               <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
                 <Building2 className="w-6 h-6 text-white" />
@@ -200,24 +234,24 @@ export default function Dashboard() {
             <div className="flex items-center mt-4 text-sm">
               <TrendingUp className="w-4 h-4 text-green-600 mr-1" />
               <span className="text-green-600 font-medium">+3</span>
-              <span className="text-gray-600 ml-1">this week</span>
+              <span className="text-muted-foreground ml-1">this week</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-orange-600 mb-1">Total Roles</p>
-                <p className="text-3xl font-bold text-orange-900">{stats?.totalRoles}</p>
+                <p className="text-sm font-medium text-orange-600 dark:text-orange-400 mb-1">Total Roles</p>
+                <p className="text-3xl font-bold text-orange-900 dark:text-orange-100">{stats?.totalRoles}</p>
               </div>
               <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
             </div>
             <div className="flex items-center mt-4 text-sm">
-              <Badge variant="outline" className="border-orange-200 text-orange-700">
+              <Badge variant="outline" className="border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-300">
                 Custom Roles
               </Badge>
             </div>
@@ -239,13 +273,13 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-4">
               {stats?.recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted transition-colors">
                   <div className="flex-shrink-0 mt-0.5">
                     {getActivityIcon(activity.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                    <div className="flex items-center mt-1 text-xs text-gray-500">
+                    <p className="text-sm font-medium text-foreground">{activity.action}</p>
+                    <div className="flex items-center mt-1 text-xs text-muted-foreground">
                       <span>by {activity.user}</span>
                       <span className="mx-1">•</span>
                       <Clock className="w-3 h-3 mr-1" />
@@ -266,19 +300,35 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleQuickAction('create-user')}
+              >
                 <UserPlus className="w-4 h-4 mr-2" />
                 Create New User
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleQuickAction('add-organization')}
+              >
                 <Building2 className="w-4 h-4 mr-2" />
                 Add Organization
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleQuickAction('create-role')}
+              >
                 <Shield className="w-4 h-4 mr-2" />
                 Create Role
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleQuickAction('view-audit-logs')}
+              >
                 <Activity className="w-4 h-4 mr-2" />
                 View Audit Logs
               </Button>
@@ -298,22 +348,22 @@ export default function Dashboard() {
             <div className="flex items-center space-x-3">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               <div>
-                <p className="text-sm font-medium">Authentication Service</p>
-                <p className="text-xs text-gray-500">All systems operational</p>
+                <p className="text-sm font-medium text-foreground">Authentication Service</p>
+                <p className="text-xs text-muted-foreground">All systems operational</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               <div>
-                <p className="text-sm font-medium">User Management API</p>
-                <p className="text-xs text-gray-500">Response time: 45ms</p>
+                <p className="text-sm font-medium text-foreground">User Management API</p>
+                <p className="text-xs text-muted-foreground">Response time: 45ms</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div>
-                <p className="text-sm font-medium">Notification Service</p>
-                <p className="text-xs text-gray-500">Minor delays detected</p>
+                <p className="text-sm font-medium text-foreground">Notification Service</p>
+                <p className="text-xs text-muted-foreground">Minor delays detected</p>
               </div>
             </div>
           </div>

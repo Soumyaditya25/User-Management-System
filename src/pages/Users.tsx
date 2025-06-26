@@ -101,15 +101,24 @@ export default function Users() {
 
   const getStatusBadge = (status: User['status']) => {
     const variants = {
-      active: 'bg-green-100 text-green-800',
-      inactive: 'bg-gray-100 text-gray-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      suspended: 'bg-red-100 text-red-800',
+      active: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700',
+      inactive: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700',
+      pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700',
+      suspended: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700',
     };
-    return <Badge className={variants[status]}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
+    return <Badge className={variants[status]} variant="outline">{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
   };
 
   const handleCreateUser = async () => {
+    if (!formData.username || !formData.email || !formData.firstName || !formData.lastName) {
+      toast({
+        title: 'Validation Error',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       const newUser = await mockApiService.createUser(currentUser?.tenantId || 'tenant-1', {
         ...formData,
@@ -200,17 +209,20 @@ export default function Users() {
     <div className="p-6 space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage user accounts, roles, and permissions</p>
+          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+          <p className="text-muted-foreground mt-1">Manage user accounts, roles, and permissions</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+            <Button 
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              data-action="add-user"
+            >
               <UserPlus className="w-4 h-4 mr-2" />
               Add User
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="sm:max-w-[600px]" data-shortcut="close">
             <DialogHeader>
               <DialogTitle>Create New User</DialogTitle>
               <DialogDescription>
@@ -220,41 +232,45 @@ export default function Users() {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">First Name *</Label>
                   <Input
                     id="firstName"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     placeholder="John"
+                    required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">Last Name *</Label>
                   <Input
                     id="lastName"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                     placeholder="Doe"
+                    required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="john.doe@company.com"
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">Username *</Label>
                 <Input
                   id="username"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   placeholder="john.doe"
+                  required
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -336,17 +352,17 @@ export default function Users() {
               </TableHeader>
               <TableBody>
                 {filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-gray-50">
+                  <TableRow key={user.id} className="hover:bg-muted/50">
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
                           {user.firstName.charAt(0)}{user.lastName.charAt(0)}
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">
+                          <div className="font-medium text-foreground">
                             {user.firstName} {user.lastName}
                           </div>
-                          <div className="flex items-center text-sm text-gray-500">
+                          <div className="flex items-center text-sm text-muted-foreground">
                             <Mail className="w-3 h-3 mr-1" />
                             {user.email}
                           </div>
@@ -362,19 +378,19 @@ export default function Users() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {user.roles.map((roleId) => (
-                          <Badge key={roleId} variant="outline" className="text-xs">
+                          <Badge key={roleId} variant="outline" className="text-xs border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300">
                             <Shield className="w-3 h-3 mr-1" />
                             {getRoleName(roleId)}
                           </Badge>
                         ))}
                         {user.roles.length === 0 && (
-                          <span className="text-sm text-gray-500">No roles assigned</span>
+                          <span className="text-sm text-muted-foreground">No roles assigned</span>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(user.status)}</TableCell>
                     <TableCell>
-                      <div className="flex items-center text-sm text-gray-600">
+                      <div className="flex items-center text-sm text-muted-foreground">
                         <Calendar className="w-3 h-3 mr-1" />
                         {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
                       </div>

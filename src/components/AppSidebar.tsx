@@ -110,6 +110,16 @@ export function AppSidebar() {
     );
   };
 
+  // Filter items for collapsed state - show only dashboard and single items
+  const getDisplayItems = () => {
+    if (isCollapsed && !isMobile) {
+      return menuItems.filter(item => 
+        item.single || item.title === "Dashboard"
+      );
+    }
+    return menuItems;
+  };
+
   return (
     <Sidebar className={`${isCollapsed && !isMobile ? "w-14" : "w-64"} bg-sidebar border-r border-sidebar-border`} collapsible="icon">
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border bg-sidebar">
@@ -125,23 +135,24 @@ export function AppSidebar() {
           </div>
         )}
         {isCollapsed && !isMobile && (
-          <div className="w-8 h-8 bg-sidebar-primary rounded-md flex items-center justify-center mx-auto">
+          <div className="w-8 h-8 bg-sidebar-primary rounded-md flex items-center justify-center">
             <Building2 className="w-5 h-5 text-sidebar-primary-foreground" />
           </div>
         )}
-        {!isMobile && <SidebarTrigger className="ml-auto h-6 w-6 text-sidebar-foreground hover:text-sidebar-accent-foreground" />}
+        <SidebarTrigger className={`${isCollapsed && !isMobile ? 'mx-auto mt-2' : 'ml-auto'} h-6 w-6 text-sidebar-foreground hover:text-sidebar-accent-foreground`} />
       </div>
 
       <SidebarContent className="px-2 bg-sidebar">
         <SidebarGroup>
           <SidebarMenu>
-            {menuItems.map((item) => (
+            {getDisplayItems().map((item) => (
               <SidebarMenuItem key={item.title}>
                 {item.single ? (
                   <SidebarMenuButton asChild className="w-full">
                     <NavLink 
                       to={item.url!} 
                       className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${getNavCls(isActive)}`}
+                      title={isCollapsed && !isMobile ? item.title : undefined}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
                       {(!isCollapsed || isMobile) && <span className="truncate">{item.title}</span>}
@@ -159,6 +170,7 @@ export function AppSidebar() {
                             ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                             : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                         }`}
+                        title={isCollapsed && !isMobile ? item.title : undefined}
                       >
                         <div className="flex items-center gap-3">
                           <item.icon className="w-4 h-4 flex-shrink-0" />

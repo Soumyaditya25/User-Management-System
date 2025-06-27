@@ -247,6 +247,7 @@ tsconfig.json    TypeScript configuration
 ## Demo Video
 
 
+▶️ [Watch Demo Video](https://youtu.be/ldqT50s7G0g)
 
 ---
 Made with ❤️ by Soumyaditya
